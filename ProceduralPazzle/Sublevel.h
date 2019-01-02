@@ -33,7 +33,7 @@ public:
 	Sublevel();
 	Sublevel(size_t x, size_t y);//конструктор подуровня с произвольной шириной и высотой
 	Sublevel(size_t x, size_t y, int lastWidth); //конструктор подуровня с произвольной высотой
-	Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType);
+	Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType); //конструктор подуровня с произвольной высотой
 	//конструкторы с предустановленными координатами входа/выхода
 	Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeType); //конструктор для создания подуровня с отверствием с одной стороны и произвольными размерами(holeType = 0 - вход, 1 - выход)
 	//конструкторы с произвольными координатами входа/выхода

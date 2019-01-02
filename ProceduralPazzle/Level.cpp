@@ -39,7 +39,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 	sublevelLineState state = start;
 	size_t lx = 0;
 	size_t ly = 0;
-	int enterX = -1; //изначальные позиции выхода из текущего-входа в следующий
+	int enterX = -1; //изначальные позиции выхода из текущего-входа в следующий имею координату, которой не может быть. То есть вход не добавится.
 	int enterY = -1;
 	vector<int> sublevelHorizontalLineHeight; //вектор для хранения суммы высот каждого подуровня по вертикали. Необходим для того, чтобы знать на какой коориднате по y делать подуровень
 	Sublevel sub(lx, ly, right, exit_); //создаю первую стартовую комнату, в которой будет только выход
@@ -80,9 +80,9 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 			break;
 		case rightEnterLeftExit:
 			sub = Sublevel(level[lenght].getX(), sublevelHorizontalLineHeight[lenght], level[lenght].getWidth(), enterX, 0, 0);
-			sublevelHorizontalLineHeight[lenght] += sub.getHeight();
-			sub.addExit(left);
-			enterX = sub.getExitPosX();
+			sublevelHorizontalLineHeight[lenght] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
+			sub.addExit(left); //добавляю выход в левую стенку подуровня
+			enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 			enterY = sub.getExitPosY();
 			//level.insert(level.begin() + lenght, sub);
 			level.push_back(sub);
@@ -99,7 +99,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 				//относительные координаты выхода/входа нужны из-за цикла в конструкторе подуровня, который расставляет блоки в зависимости от текущих значений i и j которые начинаются от нуля
 				sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 				sub.addExit(left); //добавляю выход в новый подуровень
-				enterX = sub.getExitPosX(); //получаю координаты выхода и входа из этого подуровня
+				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 				enterY = sub.getExitPosY();
 				level.insert(level.begin() + lenght, sub); //добавляю новый подуровень в вектор
 				//level.push_back(sub);
