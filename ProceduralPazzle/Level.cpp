@@ -40,43 +40,45 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 	//rightEnterLeftExit - создается линия подуровней с входом срправа сверху и выходом слева снизу
 	//leftEnterRightExit - наоборот
 	LevelGenerationState generationState = normal; //переменная, отвечающая за попадание в ситуацию бесконечного цикла в конструкторах подуровней. Если такое случается, то уровень будет пересоздан заново.
-	size_t lx = 0;
-	size_t ly = 0;
-	int enterX = -1; //изначальные позиции выхода из текущего-входа в следующий имею координату, которой не может быть. То есть вход не добавится.
-	int enterY = -1;
+	size_t lx;
+	size_t ly;
+	int enterX; //изначальные позиции выхода из текущего-входа в следующий 
+	int enterY;
 	vector<int> sublevelHorizontalLineHeight; //вектор для хранения суммы высот каждого подуровня по вертикали. Необходим для того, чтобы знать на какой коориднате по y делать подуровень
-	Sublevel sub(lx, ly, right, exit_); //создаю первую стартовую комнату, в которой будет только выход
-	sublevelHorizontalLineHeight.push_back(sub.getHeight());
-	level.push_back(sub);
+	Sublevel sub;
 	int lenght = 0; //длина первой линии из подуровней по горизонтали
 	int some = 0;
-	do
+	do //данный цикл необходим для обработки вхождения конструкторов Sublevel в состояние бесконечного цикла. Это бывает, когда не получается создать подуровень с проходами между соседними
+		//из-за несостыковки по высоте. То есть, в одном столбике создались подуровени с слишком большими высотами, а в другом слишком маленькими. В таком случае конструктор подуровня отправляет
+		// в generationState значение restart и выходит из цикла. По умолчанию переменная равна normal, но потому что это do while цикл отработает один раз.
 	{
-		state = start;
-		generationState = normal;
+		state = start; //первым сработает первый кейс в свиче
+		generationState = normal; //ставлю состояние генерации в нормальное
 		lx = 0;
 		ly = 0;
-		enterX = -1;
+		enterX = -1; //координаты -1 не может быть, по этому это будет изначальной координатой
 		enterY = -1;
 		level.clear();
 		sublevelHorizontalLineHeight.clear();
-		sub = Sublevel(lx, ly, right, exit_);
+		sub = Sublevel(lx, ly, right, exit_); //создаю первую стартовую комнату, в которой будет только выход
 		sublevelHorizontalLineHeight.push_back(sub.getHeight());
 		level.push_back(sub);
 		lenght = 0;
 		some = 0;
-		do
+		do //данный цикл необходим для чередования линий из подуровней. То есть вход справа сверху, выход снизу слева и вход слева сверху и выход справа снизу
+			//цикл необходим из-за того, что неизвестно сколько именно подуровней может поместится по высоте т.е. не известно количество чередований rightEnterLeftExit и leftEnterRightExit
+			//start отработает один раз и больше в свич в него не зайдет
 		{
 			switch (state)
 			{
-			case start:
+			case start: //на этапе старта создается самая первая линия из подуровней с произвольной шириной и высотой. В других кейсах произвольной будет только высота.
 			{
 				while (lx < X_SIZE - 3)
 				{
 					level.push_back(sub);
 					sublevelHorizontalLineHeight.push_back(sub.getHeight()); //заполняю вектор высот
 					lx += sub.getWidth();
-					enterX = sub.getExitPosX();
+					enterX = sub.getExitPosX(); //
 					enterY = sub.getExitPosY();
 					sub = Sublevel(lx, ly, 0, enterY, 0);
 					sub.addExit(right);
@@ -97,6 +99,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 			}
 			break;
 			case rightEnterLeftExit:
+			{
 				sub = Sublevel(level[lenght].getX(), sublevelHorizontalLineHeight[lenght], level[lenght].getWidth(), enterX, 0, 0, generationState);
 				sublevelHorizontalLineHeight[lenght] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 				sub.addExit(left); //добавляю выход в левую стенку подуровня
@@ -106,7 +109,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 				level.push_back(sub);
 				for (int i = lenght - 1; i > 0; i--)
 				{
-					sub.getExitGlobalCoords(enterX, enterY); //получаю координаты выхода из прошлого подуровня
+					sub.getExitGlobalCoords(enterX, enterY); //получаю координаты выхода из прошлого подуровня в масштабе всего уровня(то есть, не относительно начала подуровня)
 					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), level[i].getWidth() - 1, enterY - sublevelHorizontalLineHeight[i], 0, generationState);
 					//первый аргумент это x позиция верхнего подуровня, 
 					//второй это текущия позиция данного столбика из вектора высот, 
@@ -119,17 +122,54 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 					sub.addExit(left); //добавляю выход в новый подуровень
 					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 					enterY = sub.getExitPosY();
-					level.insert(level.begin() + lenght, sub); //добавляю новый подуровень в вектор
-					//level.push_back(sub);
+				//	level.insert(level.begin() + lenght + 1, sub); //добавляю новый подуровень в вектор
+					level.push_back(sub);
 				}
+				//убераю старый выход влево, вместо него делаю выход вниз
+				Block * block = (Block*)level[lenght].getMap()[level[lenght].getExitPosY()][level[lenght].getExitPosX()]; //убераю старый выход в бок, вместо него ставлю стену
+				block->setBlockType(brick);
+				level[lenght].getMap()[level[lenght].getExitPosY()][level[lenght].getExitPosX()] = block;
+
+				level[lenght].addExit(down); //теперь делаю новый выход уже вниз
+				level[lenght].getExitPosX(); //получаю координаты выхода из этого подуровня
+				level[lenght].getExitPosY();
+				state = leftEnterRightExit;//изменяю состояние линии подуровней на начало слева
 				some++;
+			}
 				break;
 			case leftEnterRightExit:
+				sub = Sublevel(level[0].getX(), sublevelHorizontalLineHeight[0], level[0].getWidth(), enterX, 0, 0, generationState);
+				sublevelHorizontalLineHeight[lenght] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
+				sub.addExit(right); //добавляю выход в левую стенку подуровня
+				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
+				enterY = sub.getExitPosY();
+				//level.insert(level.begin() + lenght, sub);
+				level.push_back(sub);
+				for (int i = 1; i < lenght; i++)
+				{
+					sub.getExitGlobalCoords(enterX, enterY); //получаю координаты выхода из прошлого подуровня в масштабе всего уровня(то есть, не относительно начала подуровня)
+					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), 0, enterY - sublevelHorizontalLineHeight[i], 0, generationState);
+					//первый аргумент это x позиция верхнего подуровня, 
+					//второй это текущия позиция данного столбика из вектора высот, 
+					//третий это ширина верхнего подуровня(в это она не будет рандомится) в отличии от высоты
+					//четвертый это ширина-1 т.е. позиция входа в подуровень по X(то есть самая правая стенка)
+					//пятый это разница между глобальной координатой выхода из прошлого подуровня и текущей высотой этого столбика подуровней - в результате получается координата относительно начала этого подуровня
+					//шестой 0 - тип прохода в подуровне - вход
+					//относительные координаты выхода/входа нужны из-за цикла в конструкторе подуровня, который расставляет блоки в зависимости от текущих значений i и j которые начинаются от нуля
+					sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
+					sub.addExit(right); //добавляю выход в новый подуровень
+					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
+					enterY = sub.getExitPosY();
+					//level.insert(level.begin() + lenght, sub); //добавляю новый подуровень в вектор
+					level.push_back(sub);
+				}
+				some++;
+				state = rightEnterLeftExit;
 				break;
 			default:
 				break;
 			}
-		} while (some < 2/*ly < Y_SIZE - 3*/);
+		} while (some < 3/*ly < Y_SIZE - 3*/);
 	} while (generationState == restart);
 	
 }
