@@ -30,6 +30,7 @@ enum sublevelLineState
 {
 	start, rightEnterLeftExit, leftEnterRightExit
 };
+
 class Level
 {
 protected:

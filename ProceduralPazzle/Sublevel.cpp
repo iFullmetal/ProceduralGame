@@ -113,10 +113,17 @@ Sublevel::Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, boo
 		}
 	}
 }
-Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType) //фиксированая ширина и координата входа
+Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState) //фиксированая ширина и координата входа
 {
 	bool doesHoleExist = 0;
+	size_t iterationsCounter = 0;
 	while (!doesHoleExist || enterPosX > width || enterPosY > height) {
+		iterationsCounter++;
+		if(iterationsCounter > MAX_RAND_LOOP_COUNT) //в случае если конструктор вошел в бесконечный цикл, то выхожу из него и пересоздаю сам уровень
+		{
+			gState = restart;
+			break;
+		}
 		map.clear();
 		this->x = x;
 		this->y = y;
