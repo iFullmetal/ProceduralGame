@@ -37,7 +37,7 @@ protected:
 	vector<Sublevel> level; //вектор подуровней, в котором каждый подуровень знает, в какой координате его отрисовать
 public:
 	Level();
-	Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor);
+	
 	int levelLenght; //количество подуровней по горизонтали
 	vector<Sublevel> & getLevelMap();
 	void draw();

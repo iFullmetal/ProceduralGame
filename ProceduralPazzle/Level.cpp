@@ -2,40 +2,6 @@
 
 Level::Level()
 {
-	//size_t lx = 0;
-	//size_t ly = 0;
-	//int enterX;
-	//int enterY;
-	//Sublevel sub(lx, ly, right, exit_);
-	//int lenght = 0; //длина горизантальной линии
-	////создание первой горизонтальной полосы из подуровней
-	//while(lx < X_SIZE - 3)
-	//{
-	//	level.push_back(sub);
-	//	lx += sub.getWidth();
-	//	enterX = sub.getExitPosX();
-	//	enterY = sub.getExitPosY();
-	//	sub = Sublevel(lx, ly, 0, enterY, 0);
-	//	sub.addExit(right);
-	//	lenght++;
-	//}
-
-	//levelLenght = lenght;
-	////создание вертикальных столбцов по ширине каждого из горизонтальных подуровней
-	//for(int i = 0; i < lenght; i++)
-	//{
-	//	ly = level[i].getHeight(); //высота соответсвующего подуровня по горизонтали становится y-координатой вертикального подуровня
-	//	lx = level[i].getX(); // x аналогичен
-	//	while (ly < Y_SIZE - 3)
-	//	{
-	//		sub = Sublevel(lx, ly, level[i].getWidth()); //вызов конструкора подуровеня с фиксированной шириной
-	//		level.push_back(sub);
-	//		ly += sub.getHeight(); // y следующего подуровня увеличивается на высоту преидущего
-	//	}
-	//}
-}
-Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
-{
 	sublevelLineState state = start; //старт - создается линия подуровней без изначального входа, но с выходом справа снизу.
 	//rightEnterLeftExit - создается линия подуровней с входом срправа сверху и выходом слева снизу
 	//leftEnterRightExit - наоборот
@@ -75,7 +41,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 					level.push_back(sub);
 					sublevelHorizontalLineHeight.push_back(sub.getHeight()); //заполняю вектор высот
 					lx += sub.getWidth();
-					enterX = sub.getExitPosX(); //
+					enterX = sub.getExitPosX(); 
 					enterY = sub.getExitPosY();
 					sub = Sublevel(lx, ly, 0, enterY, 0, generationState);
 					sub.addExit(right);
@@ -96,7 +62,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 			break;
 			case rightEnterLeftExit:
 			{
-				sub = Sublevel(level[lenght - 1].getX(), sublevelHorizontalLineHeight[lenght - 1], level[lenght - 1].getWidth(), enterX, 0, 0, generationState);
+				sub = Sublevel(level[lenght - 1].getX(), sublevelHorizontalLineHeight[lenght - 1], level[lenght - 1].getWidth(), enterX, 0, 0, generationState, y_sided);
 				sublevelHorizontalLineHeight[lenght - 1] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 				sub.addExit(left); //добавляю выход в левую стенку подуровня
 				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
@@ -106,7 +72,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 				for (int i = lenght - 2; i >= 0; i--)
 				{
 					sub.getExitGlobalCoords(enterX, enterY); //получаю координаты выхода из прошлого подуровня в масштабе всего уровня(то есть, не относительно начала подуровня)
-					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), level[i].getWidth() - 1, enterY - sublevelHorizontalLineHeight[i], 0, generationState);
+					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), level[i].getWidth() - 1, enterY - sublevelHorizontalLineHeight[i], 0, generationState, x_sided);
 					//первый аргумент это x позиция верхнего подуровня, 
 					//второй это текущия позиция данного столбика из вектора высот, 
 					//третий это ширина верхнего подуровня(в это она не будет рандомится) в отличии от высоты
@@ -134,7 +100,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 				break;
 			case leftEnterRightExit:
 			{
-				sub = Sublevel(level[0].getX(), sublevelHorizontalLineHeight[0], level[0].getWidth(), enterX, 0, 0, generationState);
+				sub = Sublevel(level[0].getX(), sublevelHorizontalLineHeight[0], level[0].getWidth(), enterX, 0, 0, generationState, y_sided);
 				sublevelHorizontalLineHeight[0] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 				sub.addExit(right); //добавляю выход в левую стенку подуровня
 				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
@@ -144,7 +110,7 @@ Level::Level(int uselessvaluethatgivesmeposabilitytocreatesecondconstructor)
 				for (int i = 1; i < lenght; i++)
 				{
 					sub.getExitGlobalCoords(enterX, enterY); //получаю координаты выхода из прошлого подуровня в масштабе всего уровня(то есть, не относительно начала подуровня)
-					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), 0, enterY - sublevelHorizontalLineHeight[i], 0, generationState);
+					sub = Sublevel(level[i].getX(), sublevelHorizontalLineHeight[i], level[i].getWidth(), 0, enterY - sublevelHorizontalLineHeight[i], 0, generationState, x_sided);
 					//первый аргумент это x позиция верхнего подуровня, 
 					//второй это текущия позиция данного столбика из вектора высот, 
 					//третий это ширина верхнего подуровня(в это она не будет рандомится) в отличии от высоты

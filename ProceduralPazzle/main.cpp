@@ -28,7 +28,7 @@ void main()
 	fontInfo.dwFontSize.X = 8;
 	SetCurrentConsoleFontEx(hConsole, TRUE, &fontInfo);
 #pragma endregion
-	Level level(1251);
+	Level level;
 	//Level level;
 	/*for(int count = 0; count < 5; count++)
 	{

@@ -19,43 +19,7 @@ Sublevel::Sublevel()
 {
 
 }
-Sublevel::Sublevel(size_t x, size_t y) //конструктор для создания подуровня с произвольной высотой и шириной
-{
-	this->x = x;
-	this->y = y;
-	int times = 0; //переменная нужна для того случая, когда минимальный размер подуровня при добавлении увеличивает размер карты до такой степени, что
-	//не получается создать карту меньше определенного размера и программа входит в бесконечный цикл
-	do //ширина
-	{
-		width = randomNumber(MIN_RAND_SIZE, MAX_RAND_SIZE);
-		times++;
-	} while (width + x > X_SIZE && times < MAX_RAND_LOOP_COUNT); //пока размеры не подходят условию и количество итераций меньше маскимального
-	times = 0;
-	do//высота
-	{
-		height = randomNumber(MIN_RAND_SIZE, MAX_RAND_SIZE);
-		times++;
-	} while (height + y > Y_SIZE && times < MAX_RAND_LOOP_COUNT);
 
-	for (int i = 0; i < height; i++) //делаю двумерный вектор указателей абстрактного класса Content
-	{
-		map.push_back(vector<Content*>(width));
-	}
-	for (int i = 0; i < height; i++)  //цикл прохода по массиву для проставления границ
-	{
-		for (int j = 0; j < width; j++)
-		{
-			if(i == 0 || j == 0 || j == width - 1 || i == height - 1)//если это граница, то ставлю кирпичи
-			{
-				map[i][j] = new Block(x + j, y + i, brick);
-			}
-			else//если нет, то пустоту
-			{
-				map[i][j] = new Block(x + j, y + i, none);
-			}
-		}
-	}
-}
 Sublevel::Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState)  //конструктор для создания подуровня с отверствием с одной стороны(holeType = 0 - вход, 1 - выход)
 {
 	bool doesHoleExist = 0;
@@ -119,11 +83,33 @@ Sublevel::Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, boo
 		}
 	}
 }
-Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState) //фиксированая ширина и координата входа
+Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState, HoleDestenation holeDestenation) //фиксированая ширина и координата входа
 {
-	bool doesHoleExist = 0;
-	size_t iterationsCounter = 0;
-	while (!doesHoleExist || enterPosX > width || enterPosY > height) {
+	bool doesHoleExist = 0; //в случае, если не получилось добавить проход, то эта переменная равна нулю. Пока она ноль, цикл будет пересоздавать подуровень
+
+	size_t iterationsCounter = 0; //счетчик итераций цикла. Если их становится больше, чем константа MAX_RAND_LOOP_COUNT, то цикл стал бесконечным, 
+	//а значит изначальные координаты уже не дают возможности создать подуровень и пора пересоздавать уровень заново.
+
+	//максимальные и минимальные координаты для входа/выхода
+	int minimalXHolePos = 0;
+	int minimalYHolePos = 0;
+	int maximumXHolePos = width;
+	int maximumYHolePos = height;
+
+	if(holeDestenation == x_sided) //в зависимисоти от того, какой оси будет пренадлежать проход, противоположная координата должна будет пропускать 0 и край чтобы небыло так, 
+		//чтоб проход оказался внутри стенки в углу. Ну вообщем если убрать этот if и откомпилировать, то будет видно, о чем я говорю.  
+	{
+		maximumYHolePos = height - 2;
+		maximumXHolePos = width;
+		minimalYHolePos = 1;
+	}
+	else
+	{
+		maximumXHolePos = width - 2;
+		maximumYHolePos = height;
+		minimalXHolePos = 1;
+	}
+	while (!doesHoleExist || enterPosX > maximumXHolePos  || enterPosX < minimalXHolePos || enterPosY > maximumYHolePos || enterPosY < minimalYHolePos) {
 		iterationsCounter++;
 		if(iterationsCounter > MAX_RAND_LOOP_COUNT) //в случае если конструктор вошел в бесконечный цикл, то выхожу из него и пересоздаю сам уровень
 		{
@@ -178,42 +164,25 @@ Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t 
 				}
 			}
 		}
-	}
-}
-
-Sublevel::Sublevel(size_t x, size_t y, int lastWidth) // подуровень с произвольной высотой 
-{
-
-	this->x = x;
-	this->y = y;
-	int times = 0;
-	width = lastWidth;
-	times = 0;
-	do
-	{
-		height = randomNumber(MIN_RAND_SIZE, MAX_RAND_SIZE);//rand() % 20;
-		times++;
-	} while (height + y > Y_SIZE && times < MAX_RAND_LOOP_COUNT);
-	for (int i = 0; i < height; i++)
-	{
-		map.push_back(vector<Content*>(width));
-	}
-	for (int i = 0; i < height; i++)
-	{
-		for (int j = 0; j < width; j++)
+		if (holeDestenation == x_sided) //ширина изменилась, надо обновить границы проходов на случай, если цикл отработает еще раз
 		{
-			if (i == 0 || j == 0 || j == width - 1 || i == height - 1)
-			{
-				map[i][j] = new Block(x + j, y + i, brick);
-			}
-			else
-			{
-				map[i][j] = new Block(x + j, y + i, none);
-			}
+			maximumYHolePos = height - 2;
+			maximumXHolePos = width;
+			minimalXHolePos = 0;
+			minimalYHolePos = 1;
+		}
+		else
+		{
+			maximumXHolePos = width - 2;
+			maximumYHolePos = height;
+			minimalXHolePos = 1;
+			minimalYHolePos = 0;
+
 		}
 	}
-
 }
+
+
 Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode) //конструктор для создания подуровня с отверствиями(holeType = 0 - вход, 1 - выход)
 {
 	this->x = x;
@@ -239,10 +208,6 @@ Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode) //конст
 		generateEnterExit(enterPosX, enterPosY, width, height, holePosition);
 		break;
 	case exit_:
-		generateEnterExit(exitPosX, exitPosY, width, height, holePosition);
-		break;
-	case enter_and_exit:
-		generateEnterExit(enterPosX, enterPosY, width, height, holePosition);
 		generateEnterExit(exitPosX, exitPosY, width, height, holePosition);
 		break;
 	default:
@@ -272,7 +237,6 @@ Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode) //конст
 			}
 		}
 	}
-	
 }
 void Sublevel::generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, hole holePosition)
 {
