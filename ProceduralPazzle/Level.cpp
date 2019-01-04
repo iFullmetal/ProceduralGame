@@ -2,7 +2,7 @@
 
 Level::Level()
 {
-	sublevelLineState state = start; //старт - создается линия подуровней без изначального входа, но с выходом справа снизу.
+	sublevelLineState state; //старт - создается линия подуровней без изначального входа, но с выходом справа снизу.
 	//rightEnterLeftExit - создается линия подуровней с входом срправа сверху и выходом слева снизу
 	//leftEnterRightExit - наоборот
 	LevelGenerationState generationState = normal; //переменная, отвечающая за попадание в ситуацию бесконечного цикла в конструкторах подуровней. Если такое случается, то уровень будет пересоздан заново.
@@ -26,7 +26,7 @@ Level::Level()
 		enterY = -1;
 		level.clear();
 		sublevelHorizontalLineHeight.clear();
-		sub = Sublevel(lx, ly, right, exit_); //создаю первую стартовую комнату, в которой будет только выход
+		sub = Sublevel(lx, ly, right, exit_, generationState); //создаю первую стартовую комнату, в которой будет только выход
 		lenght = 0;
 		do //данный цикл необходим для чередования линий из подуровней. То есть вход справа сверху, выход снизу слева и вход слева сверху и выход справа снизу
 			//цикл необходим из-за того, что неизвестно сколько именно подуровней может поместится по высоте т.е. не известно количество чередований rightEnterLeftExit и leftEnterRightExit
@@ -44,10 +44,17 @@ Level::Level()
 					enterX = sub.getExitPosX(); 
 					enterY = sub.getExitPosY();
 					sub = Sublevel(lx, ly, 0, enterY, 0, generationState);
+					if(generationState == restart)
+					{
+						break;
+					}
 					sub.addExit(right);
 					lenght++;
 				}
-				
+				if (generationState == restart)
+				{
+					break;
+				}
 				Block * block = (Block*)level[lenght - 1].getMap()[level[lenght - 1].getExitPosY()][level[lenght - 1].getExitPosX()]; //убераю старый выход в бок, вместо него ставлю стену
 				block->setBlockType(brick);
 				level[lenght - 1].getMap()[level[lenght - 1].getExitPosY()][level[lenght - 1].getExitPosX()] = block;
@@ -80,12 +87,20 @@ Level::Level()
 					//пятый это разница между глобальной координатой выхода из прошлого подуровня и текущей высотой этого столбика подуровней - в результате получается координата относительно начала этого подуровня
 					//шестой 0 - тип прохода в подуровне - вход
 					//относительные координаты выхода/входа нужны из-за цикла в конструкторе подуровня, который расставляет блоки в зависимости от текущих значений i и j которые начинаются от нуля
+					if (generationState == restart)
+					{
+						break;
+					}
 					sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 					sub.addExit(left); //добавляю выход в новый подуровень
 					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 					enterY = sub.getExitPosY();
 				//	level.insert(level.begin() + lenght + 1, sub); //добавляю новый подуровень в вектор
 					level.push_back(sub);
+				}
+				if (generationState == restart)
+				{
+					break;
 				}
 				//убераю старый выход влево, вместо него делаю выход вниз
 				Block * block = (Block*)level[level.size()-1].getMap()[level[level.size() - 1].getExitPosY()][level[level.size() - 1].getExitPosX()]; //убераю старый выход в бок, вместо него ставлю стену
@@ -118,12 +133,20 @@ Level::Level()
 					//пятый это разница между глобальной координатой выхода из прошлого подуровня и текущей высотой этого столбика подуровней - в результате получается координата относительно начала этого подуровня
 					//шестой 0 - тип прохода в подуровне - вход
 					//относительные координаты выхода/входа нужны из-за цикла в конструкторе подуровня, который расставляет блоки в зависимости от текущих значений i и j которые начинаются от нуля
+					if (generationState == restart)
+					{
+						break;
+					}
 					sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
 					sub.addExit(right); //добавляю выход в новый подуровень
 					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 					enterY = sub.getExitPosY();
 					//level.insert(level.begin() + lenght, sub); //добавляю новый подуровень в вектор
 					level.push_back(sub);
+				}
+				if (generationState == restart)
+				{
+					break;
 				}
 				//меняю выход из бокового в нижний справа
 				Block * block = (Block*)level[level.size() - 1].getMap()[level[level.size() - 1].getExitPosY()][level[level.size() - 1].getExitPosX()]; //убераю старый выход в бок, вместо него ставлю стену
@@ -139,7 +162,7 @@ Level::Level()
 			default:
 				break;
 			}
-		} while (sublevelHorizontalLineHeight[0] < Y_SIZE - 3);
+		} while (sublevelHorizontalLineHeight[0] < Y_SIZE - 3 && generationState != restart);
 	} while (generationState == restart);
 	
 }

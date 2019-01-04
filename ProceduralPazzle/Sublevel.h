@@ -4,8 +4,8 @@
 using namespace std;
 const size_t X_SIZE = 70; //максимальный размер карты по x
 const size_t Y_SIZE = 70; // максимальный размер карты по y
-const size_t MIN_RAND_SIZE = 8; //минимальный размер подуровня
-const size_t MAX_RAND_SIZE = 20; //максимальный размер подуровня
+const size_t MIN_RAND_SIZE = 10; //8 минимальный размер подуровня
+const size_t MAX_RAND_SIZE = 20; //20 максимальный размер подуровня
 const size_t MAX_RAND_LOOP_COUNT = 40; //максимальное количество итераций цикла генерации размеров подуровня
 
 enum LevelGenerationState  //перечисление, отвечающее за попадание в ситуацию бесконечного цикла в конструкторах подуровней. Если такое случается, то весь уровень будет пересоздан заново.
@@ -44,7 +44,7 @@ public:
 	//конструкторы с предустановленными координатами входа/выхода
 	Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeTyp, LevelGenerationState & gStatee); //конструктор для создания подуровня с отверствием с одной стороны и произвольными размерами(holeType = 0 - вход, 1 - выход)
 	//конструкторы с произвольными координатами входа/выхода
-	Sublevel(size_t x, size_t y, hole holePosition, holeMode mode); //конструктор подуровня с произвольной координатой отверстия или отверстий(зависит от mode)
+	Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGenerationState & gState); //конструктор подуровня с произвольной координатой отверстия или отверстий(зависит от mode)
 
 	vector<vector<Content*>> & getMap();
 	void addExit(hole holePosition); //функция для создания выхода в уже созданном подуровне

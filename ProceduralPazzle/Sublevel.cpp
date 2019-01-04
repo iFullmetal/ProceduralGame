@@ -164,7 +164,7 @@ Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t 
 				}
 			}
 		}
-		if (holeDestenation == x_sided) //ширина изменилась, надо обновить границы проходов на случай, если цикл отработает еще раз
+		if (holeDestenation == x_sided) //высота изменилась, надо обновить границы проходов на случай, если цикл отработает еще раз
 		{
 			maximumYHolePos = height - 2;
 			maximumXHolePos = width;
@@ -183,7 +183,7 @@ Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t 
 }
 
 
-Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode) //конструктор для создания подуровня с отверствиями(holeType = 0 - вход, 1 - выход)
+Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGenerationState & gState) //конструктор для создания подуровня с отверствиями(holeType = 0 - вход, 1 - выход)
 {
 	this->x = x;
 	this->y = y;
@@ -194,13 +194,23 @@ Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode) //конст
 	{
 		width = randomNumber(MIN_RAND_SIZE, MAX_RAND_SIZE);
 		times++;
-	} while (width + x > X_SIZE && times < MAX_RAND_LOOP_COUNT); //пока размеры не подходят условию и количество итераций меньше маскимального
+		if(times > MAX_RAND_LOOP_COUNT)
+		{
+			gState = restart;
+			break;
+		}
+	} while (width + x > X_SIZE); //пока размеры не подходят условию и количество итераций меньше маскимального
 	times = 0;
 	do//высота
 	{
 		height = randomNumber(MIN_RAND_SIZE, MAX_RAND_SIZE);
 		times++;
-	} while (height + y > Y_SIZE && times < MAX_RAND_LOOP_COUNT);
+		if (times > MAX_RAND_LOOP_COUNT)
+		{
+			gState = restart;
+			break;
+		}
+	} while (height + y > Y_SIZE);
 	//генерация координат входа и выхода
 	switch (mode)
 	{
