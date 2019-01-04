@@ -19,7 +19,10 @@ Sublevel::Sublevel()
 {
 
 }
+Sublevel::~Sublevel()
+{
 
+}
 Sublevel::Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState)  //конструктор для создания подуровня с отверствием с одной стороны(holeType = 0 - вход, 1 - выход)
 {
 	bool doesHoleExist = 0;

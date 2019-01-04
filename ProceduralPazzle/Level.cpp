@@ -13,11 +13,12 @@ Level::Level()
 	vector<int> sublevelHorizontalLineHeight; //вектор для хранения суммы высот каждого подуровня по вертикали. Необходим для того, чтобы знать на какой коориднате по y делать подуровень
 	Sublevel sub;
 	int lenght = 0; //длина первой линии из подуровней по горизонтали
-	int some = 0;
+	int mainLoopIterationCount;
 	do //данный цикл необходим для обработки вхождения конструкторов Sublevel в состояние бесконечного цикла. Это бывает, когда не получается создать подуровень с проходами между соседними
 		//из-за несостыковки по высоте. То есть, в одном столбике создались подуровени с слишком большими высотами, а в другом слишком маленькими. В таком случае конструктор подуровня отправляет
 		// в generationState значение restart и выходит из цикла. По умолчанию переменная равна normal, но потому что это do while цикл отработает один раз.
 	{
+		mainLoopIterationCount = 0;
 		state = start; //первым сработает первый кейс в свиче
 		generationState = normal; //ставлю состояние генерации в нормальное
 		lx = 0;
@@ -36,6 +37,13 @@ Level::Level()
 			{
 			case start: //на этапе старта создается самая первая линия из подуровней с произвольной шириной и высотой. В других кейсах произвольной будет только высота.
 			{
+
+
+
+				//СКОРЕЕ ВСЕГО БЕСКОНЕЧНЫЙ ЦКИКЛ ТУТА 
+				//				VVVVVVVVVVV
+
+
 				while (lx < X_SIZE - 3)
 				{
 					level.push_back(sub);
@@ -162,7 +170,12 @@ Level::Level()
 			default:
 				break;
 			}
-		} while (sublevelHorizontalLineHeight[0] < Y_SIZE - 3 && generationState != restart);
+			mainLoopIterationCount++;
+		} while (sublevelHorizontalLineHeight[0] < Y_SIZE - 3 && generationState != restart /*&& mainLoopIterationCount < 20*/);
+		//if(mainLoopIterationCount >= 20)
+		//{
+		//	generationState = restart;
+		//}
 	} while (generationState == restart);
 	
 }
