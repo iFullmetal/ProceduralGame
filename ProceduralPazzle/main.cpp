@@ -48,7 +48,7 @@ void main()
 		system("cls");
 	}*/
 	
-	level.draw();
+	//level.draw();
 	getchar();
 	//system("pause");
 }

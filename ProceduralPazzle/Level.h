@@ -3,6 +3,7 @@
 #include "Sublevel.h"
 //using namespace std;
 #include <windows.h>
+const bool DEBUG_GENERATION_DRAW = false; //отрисовка подуровней во время работы конструктора уровня
 void gotopos(int x, int y)
 {
 	COORD position = { x, y };
@@ -17,6 +18,10 @@ void drawSublevel(Sublevel & sublevel)
 		{
 			sublevel.getMap()[i][j]->draw();
 		}
+	}
+	if(DEBUG_GENERATION_DRAW) //чтобы успевать увидеть что отрисовалось
+	{
+		Sleep(70);
 	}
 }
 void drawLevel(vector<Sublevel> & level)

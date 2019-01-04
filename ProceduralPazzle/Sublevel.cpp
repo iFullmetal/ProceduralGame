@@ -26,8 +26,9 @@ Sublevel::~Sublevel()
 Sublevel::Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState)  //конструктор для создания подуровня с отверствием с одной стороны(holeType = 0 - вход, 1 - выход)
 {
 	bool doesHoleExist = 0;
-	while(!doesHoleExist || enterPosX >= width - 2 || enterPosY >= height-2){ 
-		size_t iterationsCounter = 0;
+	size_t iterationsCounter = 0;
+	while(!doesHoleExist || enterPosX > width || enterPosY >= height-2 || enterPosY < 1){ 
+		iterationsCounter++;
 		if (iterationsCounter > MAX_RAND_LOOP_COUNT) //в случае если конструктор вошел в бесконечный цикл, то выхожу из него и пересоздаю сам уровень
 		{
 			gState = restart;
