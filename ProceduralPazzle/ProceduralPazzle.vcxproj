@@ -120,15 +120,16 @@
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Content.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sublevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
-    <ClInclude Include="Border.h" />
     <ClInclude Include="Content.h" />
     <ClInclude Include="draw.cpp" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="PositionChanging.h" />
     <ClInclude Include="Sublevel.h" />

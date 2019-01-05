@@ -1,14 +1,15 @@
 #pragma once
 //#include <vector>
 #include "Sublevel.h"
+#include "Entity.h"
 //using namespace std;
 #include <windows.h>
 const bool DEBUG_GENERATION_DRAW = false; //отрисовка подуровней во время работы конструктора уровня
-void gotopos(int x, int y)
-{
-	COORD position = { x, y };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
-}
+//void gotopos(int x, int y)
+//{
+//	COORD position = { x, y };
+//	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
+//}
 void drawSublevel(Sublevel & sublevel)
 {
 	gotopos(sublevel.getX(), sublevel.getY());

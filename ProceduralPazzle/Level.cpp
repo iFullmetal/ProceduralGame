@@ -21,16 +21,15 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 		{
 			system("cls");
 		}
-		mainLoopIterationCount = 0;
 		state = start; //первым сработает первый кейс в свиче
 		generationState = normal; //ставлю состояние генерации в нормальное
 		lx = 0;
 		ly = 0;
-		enterX = -1; //координаты -1 не может быть, по этому это будет изначальной координатой
+		enterX = -1; //координаты -1 не может быть, по этому это будет изначальной координатой входа
 		enterY = -1;
 		level.clear();
 		sublevelHorizontalLineHeight.clear();
-		sub = Sublevel(lx, ly, right, exit_, generationState); //создаю первую стартовую комнату, в которой будет только выход
+		sub = Sublevel(lx, ly, right_, exit_, generationState); //создаю первую стартовую комнату, в которой будет только выход
 		lenght = 0;
 		if (DEBUG_GENERATION_DRAW) //отрисовка подуровней нагорячую прямо во время создания уровня. Необходимо было чтобы понять где именно появлялся бесконечный цикл. Оставил, потому что красиво выглядит )
 		{
@@ -61,7 +60,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 					{
 						break;
 					}
-					sub.addExit(right);
+					sub.addExit(right_);
 					lenght++;
 				}
 				if (generationState == restart)
@@ -87,7 +86,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 			{
 				sub = Sublevel(level[lenght - 1].getX(), sublevelHorizontalLineHeight[lenght - 1], level[lenght - 1].getWidth(), enterX, 0, 0, generationState, y_sided);	
 				sublevelHorizontalLineHeight[lenght - 1] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
-				sub.addExit(left); //добавляю выход в левую стенку подуровня
+				sub.addExit(left_); //добавляю выход в левую стенку подуровня
 				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 				enterY = sub.getExitPosY();
 				//level.insert(level.begin() + lenght, sub);
@@ -112,7 +111,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 						break;
 					}
 					sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
-					sub.addExit(left); //добавляю выход в новый подуровень
+					sub.addExit(left_); //добавляю выход в новый подуровень
 					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 					enterY = sub.getExitPosY();
 				//	level.insert(level.begin() + lenght + 1, sub); //добавляю новый подуровень в вектор
@@ -145,7 +144,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 			{
 				sub = Sublevel(level[0].getX(), sublevelHorizontalLineHeight[0], level[0].getWidth(), enterX, 0, 0, generationState, y_sided);
 				sublevelHorizontalLineHeight[0] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
-				sub.addExit(right); //добавляю выход в левую стенку подуровня
+				sub.addExit(right_); //добавляю выход в левую стенку подуровня
 				enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 				enterY = sub.getExitPosY();
 				//level.insert(level.begin() + lenght, sub);
@@ -171,7 +170,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 						break;
 					}
 					sublevelHorizontalLineHeight[i] += sub.getHeight(); //увеличиваю высоту горизонтали подуровней за счет высоты нового подуровня. Теперь это будет новым y для следующего подуровня
-					sub.addExit(right); //добавляю выход в новый подуровень
+					sub.addExit(right_); //добавляю выход в новый подуровень
 					enterX = sub.getExitPosX(); //получаю координаты выхода из этого подуровня
 					enterY = sub.getExitPosY();
 					//level.insert(level.begin() + lenght, sub); //добавляю новый подуровень в вектор
@@ -203,11 +202,11 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 			default:
 				break;
 			}
-			mainLoopIterationCount++;
 		} while (sublevelHorizontalLineHeight[0] < Y_SIZE - 3 && generationState != restart);
-
+		Block * block = (Block*)level[level.size() - 1].getMap()[level[level.size() - 1].getExitPosY()][level[level.size() - 1].getExitPosX()]; //убераю старый выход
+		block->setBlockType(brick);
+		level[level.size() - 1].getMap()[level[level.size() - 1].getExitPosY()][level[level.size() - 1].getExitPosX()] = block;
 	} while (generationState == restart);
-	
 }
 vector<Sublevel> & Level::getLevelMap()
 {

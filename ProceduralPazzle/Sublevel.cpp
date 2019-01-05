@@ -256,12 +256,12 @@ void Sublevel::generateEnterExit(int & coordX, int & coordY, size_t width, size_
 {
 	switch (holePosition) //от этого свича зависит позиция
 	{
-	case left:
+	case left_:
 
 		coordY = randomNumber(3, height-2);
 		coordX = 0;
 		break;
-	case right:
+	case right_:
 		coordY = randomNumber(3, height-2);
 		coordX = width-1;
 		break;
