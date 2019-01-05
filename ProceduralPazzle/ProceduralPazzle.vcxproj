@@ -123,6 +123,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sublevel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +132,7 @@
     <ClInclude Include="draw.cpp" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PositionChanging.h" />
     <ClInclude Include="Sublevel.h" />
   </ItemGroup>

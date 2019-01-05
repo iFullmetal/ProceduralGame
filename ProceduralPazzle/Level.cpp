@@ -207,6 +207,23 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 		block->setBlockType(brick);
 		level[level.size() - 1].getMap()[level[level.size() - 1].getExitPosY()][level[level.size() - 1].getExitPosX()] = block;
 	} while (generationState == restart);
+	level[0].addPlayer();
+}
+Sublevel & Level::findSublevel(size_t x, size_t y)
+{
+	for(int subIterator = 0; subIterator < level.size(); subIterator++)
+	{
+		for(int i = 0; i < level[subIterator].getMap().size(); i++)
+		{
+			for (int j = 0; j < level[subIterator].getMap()[i].size(); j++)
+			{
+				if(level[subIterator].getMap()[i][j]->getX() == x && level[subIterator].getMap()[i][j]->getY() == y)
+				{
+					return level[subIterator];
+				}
+			}
+		}
+	}
 }
 vector<Sublevel> & Level::getLevelMap()
 {

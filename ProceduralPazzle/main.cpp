@@ -29,8 +29,16 @@ void main()
 	SetCurrentConsoleFontEx(hConsole, TRUE, &fontInfo);
 #pragma endregion
 	Level level;
+	while(1)
+	{
+		system("cls");
+		level.draw();
+		Sleep(50);
+
+	}
 	
-	level.draw();
-	getchar();
+	
+
+	//getchar();
 	//system("pause");
 }

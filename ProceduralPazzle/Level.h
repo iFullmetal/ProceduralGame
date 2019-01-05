@@ -1,8 +1,6 @@
 #pragma once
-//#include <vector>
 #include "Sublevel.h"
 #include "Entity.h"
-//using namespace std;
 #include <windows.h>
 const bool DEBUG_GENERATION_DRAW = false; //отрисовка подуровней во время работы конструктора уровня
 //void gotopos(int x, int y)
@@ -17,7 +15,7 @@ void drawSublevel(Sublevel & sublevel)
 	{
 		for (int j = 0; j < sublevel.getWidth(); j++)
 		{
-			sublevel.getMap()[i][j]->draw();
+			sublevel.getMap()[i][j]->update();
 		}
 	}
 	if(DEBUG_GENERATION_DRAW) //чтобы успевать увидеть что отрисовалось
@@ -43,7 +41,7 @@ protected:
 	vector<Sublevel> level; //вектор подуровней, в котором каждый подуровень знает, в какой координате его отрисовать
 public:
 	Level();
-	
+	Sublevel & findSublevel(size_t x, size_t y);
 	int levelLenght; //количество подуровней по горизонтали
 	vector<Sublevel> & getLevelMap();
 	void draw();

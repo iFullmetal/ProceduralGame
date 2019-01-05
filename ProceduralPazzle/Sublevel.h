@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Block.h"
+
 using namespace std;
 const size_t X_SIZE = 70; //максимальный размер карты по x
 const size_t Y_SIZE = 70; // максимальный размер карты по y
@@ -46,12 +47,13 @@ public:
 	Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeTyp, LevelGenerationState & gStatee); //конструктор для создания подуровня с отверствием с одной стороны и произвольными размерами(holeType = 0 - вход, 1 - выход)
 	//конструкторы с произвольными координатами входа/выхода
 	Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGenerationState & gState); //конструктор подуровня с произвольной координатой отверстия или отверстий(зависит от mode)
-
 	vector<vector<Content*>> & getMap();
+	//Position findContentPosition(Content * cont);
 	void addExit(hole holePosition); //функция для создания выхода в уже созданном подуровне
 	void addEnter(hole holePosition);
 	//get методы
 	void getExitGlobalCoords(int & x, int & y); //функция для получения глобальных координат выхода(в классе хранятся координаты относительно начала)
+	void addPlayer();
 	size_t getX();
 	size_t getY();
 	size_t getHeight();

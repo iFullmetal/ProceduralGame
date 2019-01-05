@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-void drawBlock(Entity & ent)
+void drawEntity(Entity & ent)
 {
 	switch (ent.getType())
 	{
@@ -20,6 +20,22 @@ void drawBlock(Entity & ent)
 		break;
 	}
 }
+void Entity::move(size_t dirX, size_t dirY) //эксперементально
+{
+	int localX = x - current_sublevel->getX(); //получаю координаты контента в векторе
+	int localY = y - current_sublevel->getY();
+	if(localX + dirX > 0 && localX + dirX < current_sublevel->getWidth() && 
+		localY + dirY > 0 && localY + dirY < current_sublevel->getHeight())//если данный элемент массива может существовать
+	{
+		if (!current_sublevel->getMap()[localY + dirY][localX + dirX]->isCollides()) //и не имеет колизий
+		{
+			x += dirX; //то становлюсь на его место
+			y += dirY;
+		}
+	}
+	
+
+}
 EntityType Entity::getType()
 {
 	return type;
@@ -33,7 +49,7 @@ void Entity::setEntityType(EntityType type)
 }
 void Entity::draw()
 {
-	drawBlock(*this);
+	drawEntity(*this);
 }
 Entity::~Entity()
 {

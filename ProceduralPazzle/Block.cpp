@@ -32,6 +32,10 @@ void Block::draw()
 {
 	drawBlock(*this);
 }
+void Block::update()
+{
+	draw();
+}
 void Block::setBlockType(BlockType type) 
 {
 	this->type = type;

@@ -1,4 +1,5 @@
 #include "Sublevel.h"
+#include "Player.h"
 int randomNumber(int minNum, int maxNum) {
 	int result;
 	int lowNum = 0;
@@ -282,6 +283,16 @@ void Sublevel::getExitGlobalCoords(int & x, int & y)
 	x = map[exitPosY][exitPosX]->getX();
 	y = map[exitPosY][exitPosX]->getY();
 }
+//Position Sublevel::findContentPosition(Content * cont)
+//{
+//	for(int i = 0; i < map.size(); i++)
+//	{
+//		if(find(map[i].begin(), map[i].end(), cont) != map[i].end())
+//		{
+//			return Position(i)
+//		}
+//	}
+//}
 void Sublevel::addExit(hole holePosition)
 {
 	generateEnterExit(exitPosX, exitPosY, width, height, holePosition); //генерирую координаты
@@ -328,4 +339,7 @@ vector<vector<Content*>> & Sublevel::getMap()
 {
 	return map;
 }
-
+void Sublevel::addPlayer()
+{
+	map[height / 2][width / 2] = new Player(width/2, height/2, this);
+}
