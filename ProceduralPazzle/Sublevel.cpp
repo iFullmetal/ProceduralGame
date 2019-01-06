@@ -188,7 +188,7 @@ Sublevel::Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t 
 }
 
 
-Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGenerationState & gState) //конструктор для создания подуровня с отверствиями(holeType = 0 - вход, 1 - выход)
+Sublevel::Sublevel(size_t x, size_t y, direction holePosition, holeMode mode, LevelGenerationState & gState) //конструктор для создания подуровня с отверствиями(holeType = 0 - вход, 1 - выход)
 {
 	this->x = x;
 	this->y = y;
@@ -253,7 +253,7 @@ Sublevel::Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGe
 		}
 	}
 }
-void Sublevel::generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, hole holePosition)
+void Sublevel::generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, direction holePosition)
 {
 	switch (holePosition) //от этого свича зависит позиция
 	{
@@ -278,27 +278,35 @@ void Sublevel::generateEnterExit(int & coordX, int & coordY, size_t width, size_
 		break;
 	}
 }
-void Sublevel::getExitGlobalCoords(int & x, int & y)
+void Sublevel::getExitGlobalCoords(int & x, int & y) //возвращаю координаты контента, который лежит в этой позиции масива
 {
 	x = map[exitPosY][exitPosX]->getX();
 	y = map[exitPosY][exitPosX]->getY();
 }
-//Position Sublevel::findContentPosition(Content * cont)
-//{
-//	for(int i = 0; i < map.size(); i++)
-//	{
-//		if(find(map[i].begin(), map[i].end(), cont) != map[i].end())
-//		{
-//			return Position(i)
-//		}
-//	}
-//}
-void Sublevel::addExit(hole holePosition)
+void Sublevel::getEnterGlobalCoords(int & x, int & y) //возвращаю координаты контента, который лежит в этой позиции масива
+{
+	x = map[enterPosY][enterPosX]->getX();
+	y = map[enterPosY][enterPosX]->getY();
+}
+Content * Sublevel::findContentByPosition(size_t x, size_t y)
+{
+	for(int i = 0; i < map.size(); i++) //поскольку ищу по координатам, то использовать find не получится и необходимы циклы
+	{
+		for(int j = 0; j < map[i].size(); j++)
+		{
+			if(map[i][j]->getX() == x - this->x && map[i][j]->getY() == y - this->y) //если нашел элемент с такими координатами, то возвращаю его
+			{
+				return map[i][j];
+			}
+		}
+	}
+}
+void Sublevel::addExit(direction holePosition)
 {
 	generateEnterExit(exitPosX, exitPosY, width, height, holePosition); //генерирую координаты
 	map[exitPosY][exitPosX] = new Block(x + exitPosX, y + exitPosY, none); //ставлю по ним пустой блок
 }
-void Sublevel::addEnter(hole holePosition)
+void Sublevel::addEnter(direction holePosition)
 {
 	generateEnterExit(enterPosX, enterPosY, width, height, holePosition); //генерирую координаты
 	map[enterPosY][enterPosX] = new Block(x + enterPosX, y + enterPosY, none); //ставлю по ним пустой блок

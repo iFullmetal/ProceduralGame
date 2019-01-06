@@ -22,6 +22,10 @@ public:
 	bool isCollides();
 	size_t getX();
 	size_t getY();
+	void setX(size_t x);
+	void setY(size_t y);
+	size_t & getXDirectly();
+	size_t & getYDirectly();
 	~Content();
 };
 

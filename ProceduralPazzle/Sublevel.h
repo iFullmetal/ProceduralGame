@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Block.h"
+#include <iterator>
 
 using namespace std;
 const size_t X_SIZE = 70; //максимальный размер карты по x
@@ -13,7 +14,7 @@ enum LevelGenerationState  //перечисление, отвечающее за попадание в ситуацию бе
 {
 	normal, restart
 };
-enum hole //перечисление позиций отверстия в подуровне
+enum direction //перечисление позиций отверстия в подуровне
 {
 	left_, right_, top, down
 };
@@ -36,24 +37,26 @@ private:
 	int exitPosY = -1;
 	vector<vector<Content*>> map;//двумерный массив, хрянищий все блоки подуровня. 
 	//функция с кучей параметров, необходимоя для процедурной генерации координат проходов подуровня
-	void generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, hole holePosition); //функция генерации координат входа или выхода, удолетворяющих размерам подуровня
+	void generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, direction holePosition); //функция генерации координат входа или выхода, удолетворяющих размерам подуровня
 	
 public:
-
+	vector<Sublevel>::iterator nextSublevelIterator;
 	Sublevel();
 	~Sublevel();
 	Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState, HoleDestenation holeDestenation); //конструктор подуровня с произвольной высотой
 	//конструкторы с предустановленными координатами входа/выхода
 	Sublevel(size_t x, size_t y, size_t holeCoordX, size_t holeCoordY, bool holeTyp, LevelGenerationState & gStatee); //конструктор для создания подуровня с отверствием с одной стороны и произвольными размерами(holeType = 0 - вход, 1 - выход)
 	//конструкторы с произвольными координатами входа/выхода
-	Sublevel(size_t x, size_t y, hole holePosition, holeMode mode, LevelGenerationState & gState); //конструктор подуровня с произвольной координатой отверстия или отверстий(зависит от mode)
+	Sublevel(size_t x, size_t y, direction holePosition, holeMode mode, LevelGenerationState & gState); //конструктор подуровня с произвольной координатой отверстия или отверстий(зависит от mode)
 	vector<vector<Content*>> & getMap();
-	//Position findContentPosition(Content * cont);
-	void addExit(hole holePosition); //функция для создания выхода в уже созданном подуровне
-	void addEnter(hole holePosition);
+	Content * findContentByPosition(size_t x, size_t y); //функция поиска контента по координатам
+	void addExit(direction holePosition); //функция для создания выхода в уже созданном подуровне
+	void addEnter(direction holePosition);
 	//get методы
 	void getExitGlobalCoords(int & x, int & y); //функция для получения глобальных координат выхода(в классе хранятся координаты относительно начала)
+	void getEnterGlobalCoords(int & x, int & y); //функция для получения глобальных координат выхода(в классе хранятся координаты относительно начала)
 	void addPlayer();
+	
 	size_t getX();
 	size_t getY();
 	size_t getHeight();

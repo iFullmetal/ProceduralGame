@@ -34,7 +34,11 @@ void Block::draw()
 }
 void Block::update()
 {
-	draw();
+	if(!isRendered)
+	{
+		draw();
+		isRendered = 1;
+	}
 }
 void Block::setBlockType(BlockType type) 
 {

@@ -6,16 +6,20 @@ enum EntityType
 {
 	invisible, cross, snake 
 };
+
 class Entity : public Content
 {
 protected:
 	EntityType type;
 	int health;
 	Sublevel * current_sublevel;
+	size_t vectorXPos;
+	size_t vectorYPos;
 public:
-	void move(size_t x, size_t y);
+	void move(direction dir);
+	void move(int dirX, int dirY);
 	void setEntityType(EntityType type);
-
+	void clear();
 	EntityType getType();
 	void draw();
 	Entity();
