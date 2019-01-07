@@ -4,7 +4,7 @@
 #include "Level.h"
 enum EntityType
 {
-	invisible, cross, snake 
+	invisible, cross, snake, v_arrow_up, v_arrow_down, v_arrow_right, v_arrow_left 
 };
 
 class Entity : public Content

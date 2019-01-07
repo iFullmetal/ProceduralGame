@@ -16,6 +16,18 @@ void drawEntity(Entity & ent)
 		gotopos(ent.getX(), ent.getY());
 		std::cout << 'S';
 		break;
+	case v_arrow_up:
+		gotopos(ent.getX(), ent.getY());
+		std::cout << '^';
+	case v_arrow_down:
+		gotopos(ent.getX(), ent.getY());
+		std::cout << 'v';
+	case v_arrow_right:
+		gotopos(ent.getX(), ent.getY());
+		std::cout << '>';
+	case v_arrow_left:
+		gotopos(ent.getX(), ent.getY());
+		std::cout << '<';
 	default:
 		break;
 	}
