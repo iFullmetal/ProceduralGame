@@ -49,6 +49,7 @@ Block::Block(size_t x, size_t y, BlockType type)
 	this->x = x;
 	this->y = y;
 	this->type = type;
+	hitable = false;
 	switch (type)
 	{
 	case none:

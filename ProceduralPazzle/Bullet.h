@@ -7,7 +7,8 @@ protected:
 	int dirX, dirY;
 public:
 	Bullet();
-	Bullet(int dirX, int dirY);
+	Bullet(int x, int y, int dirX, int dirY, Sublevel * current_sublevel);
+	void hit();
 	void update();
 	void fly();
 	~Bullet();

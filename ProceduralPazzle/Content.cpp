@@ -9,6 +9,10 @@ bool Content::isCollides()
 {
 	return collides;
 }
+bool Content::isHitable()
+{
+	return hitable;
+}
 size_t Content::getX()
 {
 	return x;

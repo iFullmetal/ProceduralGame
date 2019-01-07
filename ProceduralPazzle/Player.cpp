@@ -8,6 +8,8 @@ Player::Player()
 }
 Player::Player(size_t x, size_t y, Sublevel * sub) : Player()
 {
+	dirX = 0;
+	dirY = -1;
 	this->x = x;
 	this->y = y;
 	vectorXPos = x;
@@ -16,7 +18,16 @@ Player::Player(size_t x, size_t y, Sublevel * sub) : Player()
 }
 void Player::shoot()
 {
-	
+	int localX = x - current_sublevel->getX();
+	int localY = y - current_sublevel->getY();
+	if (localX + dirX >= 0 && localX + dirX < current_sublevel->getWidth() &&
+		localY + dirY >= 0 && localY + dirY < current_sublevel->getHeight())//если данный элемент массива может существовать
+	{
+		if (!current_sublevel->getMap()[localY + dirY][localX + dirX]->isCollides()) //и не имеет колизий
+		{
+			current_sublevel->getMap()[localY + dirY][localX + dirX] = new Bullet(x + dirX, y + dirY, dirX, dirY, current_sublevel);
+		}
+	}
 }
 void Player::movement()
 {

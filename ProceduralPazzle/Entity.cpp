@@ -19,15 +19,19 @@ void drawEntity(Entity & ent)
 	case v_arrow_up:
 		gotopos(ent.getX(), ent.getY());
 		std::cout << '^';
+		break;
 	case v_arrow_down:
 		gotopos(ent.getX(), ent.getY());
 		std::cout << 'v';
+		break;
 	case v_arrow_right:
 		gotopos(ent.getX(), ent.getY());
 		std::cout << '>';
+		break;
 	case v_arrow_left:
 		gotopos(ent.getX(), ent.getY());
 		std::cout << '<';
+		break;
 	default:
 		break;
 	}
@@ -115,6 +119,7 @@ EntityType Entity::getType()
 }
 Entity::Entity()
 {
+	hitable = true;
 }
 void Entity::setEntityType(EntityType type)
 {
