@@ -209,7 +209,7 @@ Level::Level() //в этом конструкторе находится основная часть алгортима процедур
 	} while (generationState == restart);
 	for(int i = 0; i < level.size()-1; i++)
 	{
-		level[i].nextSublevelIterator = level.begin() + i;
+		level[i].next = level[i+1].getPointer();
 	}
 	level[0].addPlayer();
 }

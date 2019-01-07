@@ -351,3 +351,7 @@ void Sublevel::addPlayer()
 {
 	map[height / 2][width / 2] = new Player(width/2, height/2, this);
 }
+Sublevel * Sublevel::getPointer()
+{
+	return this;
+}

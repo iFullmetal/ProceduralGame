@@ -40,7 +40,8 @@ private:
 	void generateEnterExit(int & coordX, int & coordY, size_t width, size_t height, direction holePosition); //функция генерации координат входа или выхода, удолетворяющих размерам подуровня
 	
 public:
-	vector<Sublevel>::iterator nextSublevelIterator;
+	//vector<Sublevel>::iterator nextSublevelIterator;
+	Sublevel * next;
 	Sublevel();
 	~Sublevel();
 	Sublevel(size_t x, size_t y, int lastWidth, size_t holeCoordX, size_t holeCoordY, bool holeType, LevelGenerationState & gState, HoleDestenation holeDestenation); //конструктор подуровня с произвольной высотой
@@ -56,7 +57,7 @@ public:
 	void getExitGlobalCoords(int & x, int & y); //функция для получения глобальных координат выхода(в классе хранятся координаты относительно начала)
 	void getEnterGlobalCoords(int & x, int & y); //функция для получения глобальных координат выхода(в классе хранятся координаты относительно начала)
 	void addPlayer();
-	
+	Sublevel * getPointer();
 	size_t getX();
 	size_t getY();
 	size_t getHeight();

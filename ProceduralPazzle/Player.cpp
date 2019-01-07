@@ -24,10 +24,12 @@ void Player::movement()
 	if (GetAsyncKeyState(VK_DOWN))
 	{
 		move(0, 1);
+		Sleep(50); //костыль
 	}
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
 		move(1, 0);
+		Sleep(50); //костыль
 		//move(right_);
 	}
 	if (GetAsyncKeyState(VK_LEFT))
