@@ -32,7 +32,7 @@ void Block::draw()
 {
 	drawBlock(*this);
 }
-void Block::update()
+void Block::update(float time)
 {
 	if(!isRendered)
 	{

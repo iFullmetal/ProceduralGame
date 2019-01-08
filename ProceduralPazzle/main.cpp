@@ -29,11 +29,20 @@ void main()
 	SetCurrentConsoleFontEx(hConsole, TRUE, &fontInfo);
 #pragma endregion
 	Level level;
-	
+	//float currentTime = time(NULL);
+	//float prevTime = 0;
+	float deltaTime;
+	SYSTEMTIME currentTime;
+	SYSTEMTIME prevTime;
+	GetLocalTime(&currentTime);
 	while(1)
 	{
-		level.draw();
-		Sleep(50);
+		prevTime = currentTime;
+		GetLocalTime(&currentTime);
+		deltaTime = currentTime.wMilliseconds - prevTime.wMilliseconds;
+		//deltaTime /= 10;
+		level.draw(deltaTime);
+		//Sleep(50);
 	}
 	
 	

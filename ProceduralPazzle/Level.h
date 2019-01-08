@@ -8,14 +8,14 @@ const bool DEBUG_GENERATION_DRAW = false; //отрисовка подуровней во время работы
 //	COORD position = { x, y };
 //	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 //}
-void drawSublevel(Sublevel & sublevel)
+void drawSublevel(Sublevel & sublevel, float time)
 {
 	gotopos(sublevel.getX(), sublevel.getY());
 	for (int i = 0; i < sublevel.getHeight(); i++)
 	{
 		for (int j = 0; j < sublevel.getWidth(); j++)
 		{
-			sublevel.getMap()[i][j]->update();
+			sublevel.getMap()[i][j]->update(time);
 		}
 	}
 	if(DEBUG_GENERATION_DRAW) //чтобы успевать увидеть что отрисовалось
@@ -23,11 +23,11 @@ void drawSublevel(Sublevel & sublevel)
 		Sleep(70);
 	}
 }
-void drawLevel(vector<Sublevel> & level)
+void drawLevel(vector<Sublevel> & level, float time)
 {
 	for (int i = 0; i < level.size(); i++)
 	{
-		drawSublevel(level[i]);
+		drawSublevel(level[i], time);
 	}
 }
 enum sublevelLineState
@@ -44,7 +44,7 @@ public:
 	Sublevel & findSublevel(size_t x, size_t y);
 	int levelLenght; //количество подуровней по горизонтали
 	vector<Sublevel> & getLevelMap();
-	void draw();
+	void draw(float time);
 	~Level();
 };
 

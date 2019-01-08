@@ -17,7 +17,7 @@ protected:
 	size_t vectorYPos;
 public:
 	void move(direction dir);
-	void move(int dirX, int dirY);
+	void move(int dirX, int dirY, float time);
 	void setEntityType(EntityType type);
 	void clear();
 	EntityType getType();

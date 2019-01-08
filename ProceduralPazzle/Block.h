@@ -16,7 +16,7 @@ public:
 	Block(size_t x, size_t y, BlockType type);
 	void setBlockType(BlockType type);
 	void draw();
-	void update();
+	void update(float time);
 	~Block();
 };
 

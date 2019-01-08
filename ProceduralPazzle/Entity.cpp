@@ -41,20 +41,20 @@ void Entity::clear() //функция очистки текущей координаты от символа игрока
 	gotopos(x, y);
 	std::cout << ' ';
 }
-void Entity::move(int dirX, int dirY)
+void Entity::move(int dirX, int dirY, float time)
 {
 	int localX = x - current_sublevel->getX(); //получаю координаты контента в векторе
 	int localY = y - current_sublevel->getY();
-
-	if (localX + dirX >= 0 && localX + dirX < current_sublevel->getWidth() &&
-		localY + dirY >= 0 && localY + dirY < current_sublevel->getHeight())//если данный элемент массива может существовать
+	float velocity = 1;
+	if (localX + dirX * time * velocity >= 0 && localX + dirX * time * velocity < current_sublevel->getWidth() &&
+		localY + dirY * time * velocity >= 0 && localY + dirY * time * velocity < current_sublevel->getHeight())//если данный элемент массива может существовать
 	{
 		clear(); //очищаю прежнее место пребывания заменяя его пропуском
-		if (!current_sublevel->getMap()[localY + dirY][localX + dirX]->isCollides()) //и не имеет колизий
+		if (!current_sublevel->getMap()[localY + (int)dirY * time * velocity][localX + (int)dirX * time * velocity]->isCollides()) //и не имеет колизий
 		{
-			swap(x, current_sublevel->getMap()[localY + dirY][localX + dirX]->getXDirectly()); //меняю координаты этих блкоов местами, после чего меняю их в массиве местами
-			swap(y, current_sublevel->getMap()[localY + dirY][localX + dirX]->getYDirectly());
-			swap(current_sublevel->getMap()[localY][localX], current_sublevel->getMap()[localY + dirY][localX + dirX]);
+			swap(x, current_sublevel->getMap()[localY + (int)dirY * time * velocity][localX + (int)dirX * time * velocity]->getXDirectly()); //меняю координаты этих блкоов местами, после чего меняю их в массиве местами
+			swap(y, current_sublevel->getMap()[localY + (int)dirY * time * velocity][localX + (int)dirX * time * velocity]->getYDirectly());
+			swap(current_sublevel->getMap()[localY][localX], current_sublevel->getMap()[localY + (int)dirY * time * velocity][localX + (int)dirX * time * velocity]);
 		}
 	}
 	else if (localX == current_sublevel->getExitPosX() && localY == current_sublevel->getExitPosY()) //обработка выхода из подуровня. 

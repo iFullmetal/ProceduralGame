@@ -29,9 +29,9 @@ Bullet::Bullet(int x, int y, int dirX, int dirY, Sublevel * current_sublevel)
 	this->dirX = dirX;
 	this->dirY = dirY;
 }
-void Bullet::fly()
+void Bullet::fly(float time)
 {
-	move(dirX, dirY);
+	move(dirX, dirY, time);
 }
 void Bullet::hit()
 {
@@ -54,10 +54,10 @@ void Bullet::hit()
 	//	clear();
 	//}
 }
-void Bullet::update()
+void Bullet::update(float time)
 {
 	
-	fly();
+	fly(time);
 	hit();
 	draw();
 	

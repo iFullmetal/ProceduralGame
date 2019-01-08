@@ -9,8 +9,8 @@ protected:
 public:
 	Player();
 	Player(size_t x, size_t y, Sublevel * sub);
-	void movement();
-	void update();
+	void movement(float time);
+	void update(float time);
 	void shoot();
 	~Player();
 };

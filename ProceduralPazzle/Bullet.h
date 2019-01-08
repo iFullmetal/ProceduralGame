@@ -9,8 +9,8 @@ public:
 	Bullet();
 	Bullet(int x, int y, int dirX, int dirY, Sublevel * current_sublevel);
 	void hit();
-	void update();
-	void fly();
+	void update(float time);
+	void fly(float time);
 	~Bullet();
 };
 

@@ -19,7 +19,7 @@ protected:
 public:
 	Content();
     virtual void draw() = 0;
-	virtual void update() = 0;
+	virtual void update(float time) = 0;
 	bool isCollides();
 	bool isHitable();
 	size_t getX();
