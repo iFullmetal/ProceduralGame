@@ -43,14 +43,14 @@ void Player::movement()
 		move(0, 1);
 		dirX = 0;
 		dirY = 1;
-		Sleep(50); //костыль
+		//Sleep(50); //костыль
 	}
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
 		move(1, 0);
 		dirX = 1;
 		dirY = 0;
-		Sleep(50); //костыль
+		//Sleep(50); //костыль
 		//move(right_);
 	}
 	if (GetAsyncKeyState(VK_LEFT))
